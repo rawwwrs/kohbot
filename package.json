@@ -12,9 +12,11 @@
   },
   "dependencies": {
     "dotenv": "^8.2.0",
+    "mongoose": "^5.10.5",
     "tmi.js": "^1.5.0"
   },
   "devDependencies": {
+    "@types/mongoose": "^5.7.36",
     "@types/node": "^14.6.4",
     "@types/tmi.js": "^1.4.1",
     "@typescript-eslint/eslint-plugin": "^4.1.0",
