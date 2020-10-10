@@ -3,7 +3,7 @@
 // I would like to add a counter (eventually)
 
 import { Client } from "tmi.js";
-import Command from "./lib/Command";
+import Command from "../Data/Command";
 
 export const addCommand = (
   client: Client,
@@ -17,6 +17,7 @@ export const addCommand = (
   Command.add({ name: command, response })
     .then((res) => client.say(channel, res))
     .catch((error) => console.warn("error in addCommand", error));
+
   return;
 };
 
@@ -32,6 +33,7 @@ export const editCommand = (
   Command.edit({ name: command, response })
     .then((res) => client.say(channel, res))
     .catch((error) => console.warn("error in editCommand", error));
+
   return;
 };
 
@@ -47,5 +49,25 @@ export const deleteCommand = (
   Command.delete({ name: command, response })
     .then((res) => client.say(channel, res))
     .catch((error) => console.warn("error in deleteCommand", error));
+
+  return;
+};
+
+export const runCommand = (
+  client: Client,
+  channel: string,
+  command: string,
+  username?: string
+): void => {
+  if (!username) return;
+
+  Command.check(command)
+    .then((res) => {
+      if (res) {
+        client.say(channel, res?.response?.replace("@USER", `@${username}`));
+      }
+    })
+    .catch((error) => console.warn("error in runCommand", error));
+
   return;
 };

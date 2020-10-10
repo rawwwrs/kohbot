@@ -1,12 +1,38 @@
-import CommandModel from "../models/CommandModel";
+import CommandModel from "../../models/CommandModel";
+
+// export interface CommandProperties {
+//   intialize: () => void;
+//   check: () => undefined;
+//   add: () => string;
+//   edit: () => string;
+//   delete: () => string;
+// }
 
 export default class Command {
-  static async check(name: string): Promise<string | undefined> {
+  static initialize() {
+    Command.add({
+      name: "koh",
+      response:
+        "@USER, follow me 👉👉👉 https://instagram.com/kohthebordercollie",
+    });
+    Command.add({
+      name: "rawr",
+      response: `@USER, "rawr" is dinosaur for "I LOVE YOU!"`,
+    });
+    Command.add({
+      name: "bark",
+      response: `@USER,  [insert bark here]!`,
+    });
+  }
+
+  static async check(
+    name: string
+  ): Promise<{ name: string; response: string } | null> {
     const checkCommand = await CommandModel.findOne({ name });
 
-    if (checkCommand) return "command already exists";
+    if (checkCommand) return checkCommand;
 
-    return undefined;
+    return null;
   }
 
   static async add(command: {
@@ -14,7 +40,7 @@ export default class Command {
     response: string;
   }): Promise<string> {
     const checkCommand = await Command.check(command.name);
-    if (checkCommand) return checkCommand;
+    if (checkCommand) return `${checkCommand.name} already exists`;
 
     const createCommand = await CommandModel.create(command);
     return createCommand.name;
