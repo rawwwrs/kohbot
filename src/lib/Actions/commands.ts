@@ -5,21 +5,28 @@
 import { Client } from "tmi.js";
 import Command from "../Data/Command";
 
+const getCommandFromResponse = (response?: string) => {
+  if (!response) return;
+  let newResponse: string[] | string = response.split(" ");
+  const name = newResponse.shift();
+  newResponse = newResponse.join(" ");
+  if (!name) return;
+  return {
+    name,
+    response: newResponse,
+  };
+};
+
 export const addCommand = (
   client: Client,
   channel: string,
   response?: string
 ): void => {
-  if (!response) return;
-  // TODO: WIP, need to handle errors properly.
-  // Will think about this later.
-  let newResponse: string[] | string = response.split(" ");
-  const name = newResponse.shift();
-  newResponse = newResponse.join(" ");
+  const res = getCommandFromResponse(response);
 
-  if (!name) return;
+  if (!res) return;
 
-  Command.add({ name, response: newResponse })
+  Command.add(res)
     .then((res) => client.say(channel, res))
     .catch((error) => console.warn("error in addCommand", error));
 
@@ -29,13 +36,14 @@ export const addCommand = (
 export const editCommand = (
   client: Client,
   channel: string,
-  command: string,
   response?: string
 ): void => {
   //TODO: Link to DB to edit commands.
-  if (!response) return;
+  const res = getCommandFromResponse(response);
 
-  Command.edit({ name: command, response })
+  if (!res) return;
+
+  Command.edit(res)
     .then((res) => client.say(channel, res))
     .catch((error) => console.warn("error in editCommand", error));
 
@@ -45,13 +53,13 @@ export const editCommand = (
 export const deleteCommand = (
   client: Client,
   channel: string,
-  command: string,
   response?: string
 ): void => {
   //TODO: Link to DB to delete commands.
-  if (!response) return;
+  const res = getCommandFromResponse(response);
+  if (!res) return;
 
-  Command.delete({ name: command, response })
+  Command.delete(res)
     .then((res) => client.say(channel, res))
     .catch((error) => console.warn("error in deleteCommand", error));
 

@@ -1,6 +1,11 @@
 import dotenv from "dotenv";
 import { ChatUserstate } from "tmi.js";
-import { addCommand, editCommand, runCommand } from "./lib/Actions/commands";
+import {
+  addCommand,
+  deleteCommand,
+  editCommand,
+  runCommand,
+} from "./lib/Actions/commands";
 import Database from "./lib/Data/Database";
 // import Fdgt from "./lib/Fdgt";
 import Command from "./lib/Data/Command";
@@ -77,17 +82,11 @@ client.on(
 
         switch (commandMessage.name) {
           case "add":
-            addCommand(client, channel, commandMessage.response);
-            return;
+            return addCommand(client, channel, commandMessage.response);
           case "edit":
-            return editCommand(
-              client,
-              channel,
-              commandMessage.name,
-              commandMessage.response
-            );
-          // case "delete":
-          // return;
+            return editCommand(client, channel, commandMessage.response);
+          case "delete":
+            return deleteCommand(client, channel, commandMessage.response);
           default:
             return;
         }

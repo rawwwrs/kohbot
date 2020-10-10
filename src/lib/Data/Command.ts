@@ -50,13 +50,10 @@ export default class Command {
     name: string;
     response: string;
   }): Promise<string> {
-    const checkCommand = Command.check(command.name);
-    if (checkCommand) return `${command.name} command already exists`;
-
     const createCommand = await CommandModel.findOneAndUpdate(
       { name: command.name },
       { response: command.response },
-      { new: true }
+      { new: true, upsert: true, useFindAndModify: false }
     );
 
     if (!createCommand) return `${command.name} doesn't exist`;
