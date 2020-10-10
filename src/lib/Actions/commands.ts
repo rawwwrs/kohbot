@@ -1,7 +1,3 @@
-// NIGHTBOT FEATURES I WANT
-// I want to be able to add, edit, delete and rollback commands
-// I would like to add a counter (eventually)
-
 import { ChatUserstate, Client } from "tmi.js";
 import Command from "../Data/Command";
 
@@ -46,7 +42,6 @@ export const editCommand = (
   channel: string,
   response?: string
 ): void => {
-  //TODO: Link to DB to edit commands.
   const res = getCommandFromResponse(response);
 
   if (!res) return;
@@ -63,7 +58,6 @@ export const deleteCommand = (
   channel: string,
   response?: string
 ): void => {
-  //TODO: Link to DB to delete commands.
   const res = getCommandFromResponse(response);
   if (!res) return;
 
@@ -107,10 +101,15 @@ export const modCommand = (
           return editCommand(client, channel, commandMessage.response);
         case "delete":
           return deleteCommand(client, channel, commandMessage.response);
+        case "rollback":
+          //TODO: Rollback to the previous command message
+          // I need to take history (add to edit) and I need to save it somehow.
+          return;
         default:
           return;
       }
     }
+    //TODO: add counter functionality
   }
 };
 
