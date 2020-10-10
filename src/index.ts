@@ -77,12 +77,7 @@ client.on(
 
         switch (commandMessage.name) {
           case "add":
-            addCommand(
-              client,
-              channel,
-              commandMessage.name,
-              commandMessage.response
-            );
+            addCommand(client, channel, commandMessage.response);
             return;
           case "edit":
             return editCommand(

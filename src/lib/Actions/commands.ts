@@ -8,13 +8,18 @@ import Command from "../Data/Command";
 export const addCommand = (
   client: Client,
   channel: string,
-  command: string,
   response?: string
 ): void => {
   if (!response) return;
   // TODO: WIP, need to handle errors properly.
   // Will think about this later.
-  Command.add({ name: command, response })
+  let newResponse: string[] | string = response.split(" ");
+  const name = newResponse.shift();
+  newResponse = newResponse.join(" ");
+
+  if (!name) return;
+
+  Command.add({ name, response: newResponse })
     .then((res) => client.say(channel, res))
     .catch((error) => console.warn("error in addCommand", error));
 
