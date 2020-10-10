@@ -9,6 +9,8 @@ services:
       MONGO_INITDB_ROOT_DB: kohbot
       MONGO_INITDB_ROOT_USERNAME: kohbot
       MONGO_INITDB_ROOT_PASSWORD: supersecretpassword
+    volumes: 
+      - ./mongo-volume:/data/db
 
   mongo-express:
     container_name: kohbot-mongo-express
