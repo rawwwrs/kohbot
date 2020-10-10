@@ -2,8 +2,16 @@
 // I want to be able to add, edit, delete and rollback commands
 // I would like to add a counter (eventually)
 
-import { Client } from "tmi.js";
+import { ChatUserstate, Client } from "tmi.js";
 import Command from "../Data/Command";
+
+interface commandMessageInterface {
+  type?: string;
+  name?: string;
+  response?: string;
+}
+
+const twitchChannel = process.env.CHANNEL || "rawrsatbeards";
 
 const getCommandFromResponse = (response?: string) => {
   if (!response) return;
@@ -64,6 +72,46 @@ export const deleteCommand = (
     .catch((error) => console.warn("error in deleteCommand", error));
 
   return;
+};
+
+export const modCommand = (
+  tags: ChatUserstate,
+  message: string,
+  client: Client,
+  channel: string
+) => {
+  if (tags.username === twitchChannel || tags.mod) {
+    if (message.toLowerCase().startsWith("!command")) {
+      const commandMessage: commandMessageInterface = message
+        .split(" ")
+        .reduce((acc, curr, i) => {
+          if (i === 0) {
+            return {
+              ...acc,
+              type: curr,
+            };
+          }
+          if (i === 1) {
+            return { ...acc, name: curr };
+          }
+          return {
+            ...acc,
+            response: acc?.response ? acc.response + " " + curr : curr,
+          };
+        }, {} as commandMessageInterface);
+
+      switch (commandMessage.name) {
+        case "add":
+          return addCommand(client, channel, commandMessage.response);
+        case "edit":
+          return editCommand(client, channel, commandMessage.response);
+        case "delete":
+          return deleteCommand(client, channel, commandMessage.response);
+        default:
+          return;
+      }
+    }
+  }
 };
 
 export const runCommand = (
